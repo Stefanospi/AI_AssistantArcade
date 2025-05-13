@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Assistant Arcade</title>
+    <link rel="stylesheet" href="styles/main.css" />
+    <!-- Pixel Font for headers and UI -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <!-- More readable fonts for content -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="arcade-cabinet">
+      <header class="arcade-header">
+        <h1>AI Assistant Arcade 🕹️</h1>
+        <div id="current-tool-display">Tool: Ask the Assistant</div>
+      </header>
+
+      <div class="main-content">
+        <aside class="sidebar" id="sidebar">
+          <h2>TOOLS</h2>
+          <button class="tool-button active" data-tool="ask_assistant">
+            Ask Assistant
+          </button>
+          <button class="tool-button" data-tool="regex_builder">
+            Regex Builder
+          </button>
+          <button class="tool-button" data-tool="code_fixer">Code Fixer</button>
+          <button class="tool-button" data-tool="snippet_manager">
+            Snippet Manager
+          </button>
+          <button class="tool-button" data-tool="docs_explorer">
+            Docs Explorer
+          </button>
+          <hr style="margin: 15px 0; border-color: #00ffff; opacity: 0.3" />
+          <button id="new-session-button" class="control-button">
+            NEW SESSION
+          </button>
+          <button id="clear-chat-button" class="control-button">
+            CLEAR SCREEN
+          </button>
+        </aside>
+
+        <main class="chat-area">
+          <div class="screen">
+            <div id="chat-output" class="chat-output">
+              <!-- Messages will appear here -->
+              <div class="message assistant-message">
+                <span class="role">Arcade AI:</span>
+                <span class="content"
+                  >WELCOME, PLAYER! INSERT COIN (TYPE MESSAGE) TO START. SELECT
+                  TOOL FROM CONTROL PANEL.</span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="controls-area">
+            <div class="file-upload-area">
+              <input type="file" id="file-input" style="display: none" />
+              <button id="upload-button" class="upload-button">
+                UPLOAD FILE
+              </button>
+              <div id="file-list" class="file-list"></div>
+            </div>
+            <div class="chat-input-area">
+              <textarea
+                id="chat-input"
+                placeholder="ENTER COMMAND... (SHIFT+ENTER FOR NEWLINE, ENTER TO SEND)"
+                rows="3"
+              ></textarea>
+              <button id="send-button">SEND</button>
+            </div>
+          </div>
+        </main>
+      </div>
+
+      <footer class="arcade-footer">
+        <p>POWERED BY GEMINI | PLAYER 1 READY</p>
+      </footer>
+    </div>
+
+    <script src="scripts/main.js" type="module"></script>
+  </body>
+</html>

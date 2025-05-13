@@ -1,0 +1,699 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "VT323", monospace;
+  background-color: #1a1822;
+  color: #e0e0e0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-size: 16px;
+  line-height: 1.6;
+  background-image: linear-gradient(45deg, #0d0c0f 25%, transparent 25%), linear-gradient(-45deg, #0d0c0f 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #0d0c0f 75%), linear-gradient(-45deg, transparent 75%, #0d0c0f 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+}
+@keyframes copiedPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes loadingSlide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+.arcade-cabinet {
+  width: 95%;
+  max-width: 1200px;
+  background-color: #2c2a3e;
+  border: 4px solid #8c4ed9;
+  border-radius: 8px;
+  box-shadow: 3px 3px 0px 0px #0d0c0f;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 90vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.arcade-header {
+  text-align: center;
+  padding-bottom: 15px;
+  border-bottom: 3px solid #8c4ed9;
+  margin-bottom: 20px;
+  font-family: "Press Start 2P", cursive;
+}
+.arcade-header h1 {
+  font-size: 2.2em;
+  color: #ff9d2d;
+  text-shadow: 2px 2px 0 #0d0c0f;
+  margin-bottom: 10px;
+}
+.arcade-header #current-tool-display {
+  font-size: 1.2em;
+  color: #ffdd00;
+  text-shadow: 1px 1px 0 #0d0c0f;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1822;
+  border: 1px solid #8c4ed9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ff9d2d;
+  border: 1px solid #0d0c0f;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(255, 180.8, 96);
+}
+
+::selection {
+  background-color: #ff9d2d;
+  color: #0d0c0f;
+}
+
+::-moz-selection {
+  background-color: #ff9d2d;
+  color: #0d0c0f;
+}
+
+.loading-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.loading-container .loading-text {
+  font-family: "Press Start 2P", cursive;
+  font-size: 1em;
+  color: #30d8d9;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+.loading-container .loading-bar {
+  width: 80px;
+  height: 8px;
+  background: #1a1822;
+  border: 1px solid #30d8d9;
+  overflow: hidden;
+  position: relative;
+}
+.loading-container .loading-bar .loading-fill {
+  height: 100%;
+  width: 100%;
+  background: #30d8d9;
+  animation: loadingSlide 1.5s ease-in-out infinite;
+}
+
+.main-content {
+  display: flex;
+  gap: 20px;
+  flex-grow: 1;
+  min-height: 0;
+}
+
+.sidebar {
+  width: 220px;
+  background-color: #4a455a;
+  padding: 15px;
+  border: 3px solid #8c4ed9;
+  border-radius: 4px;
+  box-shadow: 3px 3px 0px 0px #0d0c0f;
+  display: flex;
+  flex-direction: column;
+}
+.sidebar h2 {
+  font-family: "Press Start 2P", cursive;
+  font-size: 1.3em;
+  color: #ff9d2d;
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 0 #0d0c0f;
+}
+.sidebar .tool-button,
+.sidebar .control-button {
+  font-family: "Press Start 2P", cursive;
+  font-size: 1em;
+  color: #e0e0e0;
+  background-color: #4a455a;
+  border: 2px solid #ff9d2d;
+  padding: 10px 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 3px 3px 0px 0px #0d0c0f;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 0.9em;
+}
+.sidebar .tool-button:hover,
+.sidebar .control-button:hover {
+  background-color: rgb(85.8679245283, 80.0660377358, 104.4339622642);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px 0px rgb(0.7222222222, 0.6666666667, 0.8333333333);
+}
+.sidebar .tool-button:active,
+.sidebar .control-button:active {
+  background-color: rgb(62.1320754717, 57.9339622642, 75.5660377358);
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px 0px #0d0c0f;
+}
+.sidebar .tool-button:disabled,
+.sidebar .control-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: rgb(50.2641509434, 46.8679245283, 61.1320754717);
+  border-color: rgb(255, 180.8, 96);
+  box-shadow: 3px 3px 0px 0px rgb(37.5555555556, 34.6666666667, 43.3333333333);
+}
+.sidebar .tool-button:disabled:hover, .sidebar .tool-button:disabled:active,
+.sidebar .control-button:disabled:hover,
+.sidebar .control-button:disabled:active {
+  transform: none;
+}
+.sidebar .tool-button.active,
+.sidebar .control-button.active {
+  background-color: #ff9d2d;
+  color: #0d0c0f;
+  border-color: #0d0c0f;
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px 0px #0d0c0f;
+}
+.sidebar hr {
+  border: none;
+  height: 2px;
+  background-color: #8c4ed9;
+  margin: 15px 0;
+}
+.sidebar .control-button {
+  border-color: #ffdd00;
+}
+.sidebar .control-button:hover {
+  border-color: rgb(204, 176.8, 0);
+}
+.sidebar .control-button.active {
+  background-color: #ffdd00;
+  border-color: #0d0c0f;
+}
+
+.chat-area {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.screen {
+  flex-grow: 1;
+  background-color: #1a1822;
+  border: 3px solid #8c4ed9;
+  border-radius: 4px;
+  padding: 15px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+  box-shadow: inset 2px 2px 0px 0px rgba(13, 12, 15, 0.5);
+  position: relative;
+}
+.screen::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(0deg, rgba(13, 12, 15, 0.1), rgba(13, 12, 15, 0.1) 1px, transparent 1px, transparent 3px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.chat-output {
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 5px;
+  position: relative;
+  z-index: 2;
+}
+
+.chat-output .message {
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 4px;
+  border: 2px solid;
+  word-wrap: break-word;
+  line-height: 1.5;
+  font-size: 1em;
+  background-color: #2c2a3e;
+}
+.chat-output .message .role {
+  font-family: "Press Start 2P", cursive;
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.8em;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.chat-output .message .content {
+  font-family: "VT323", monospace;
+  font-size: 1.1em;
+  display: block;
+  color: #e0e0e0;
+}
+.chat-output .message .content p {
+  margin: 0 0 10px 0;
+}
+.chat-output .message .content p:last-child {
+  margin-bottom: 0;
+}
+.chat-output .message .content h1,
+.chat-output .message .content h2,
+.chat-output .message .content h3 {
+  font-family: "Press Start 2P", cursive;
+  margin: 12px 0 8px 0;
+  line-height: 1.3;
+}
+.chat-output .message .content h1 {
+  font-size: 1em;
+  color: #ff9d2d;
+}
+.chat-output .message .content h2 {
+  font-size: 0.9em;
+  color: #ffdd00;
+}
+.chat-output .message .content h3 {
+  font-size: 0.8em;
+  color: #30d8d9;
+}
+.chat-output .message .content .inline-code {
+  background-color: #1a1822;
+  border: 1px solid #8c4ed9;
+  padding: 2px 5px;
+  border-radius: 2px;
+  font-family: "Share Tech Mono", monospace;
+  font-size: 0.95em;
+  color: #30d8d9;
+}
+.chat-output .message .content .code-block {
+  background: #1a1822;
+  border: 2px solid #8c4ed9;
+  border-radius: 4px;
+  margin: 15px 0;
+  overflow: hidden;
+}
+.chat-output .message .content .code-header {
+  background: #4a455a;
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #8c4ed9;
+  font-family: "Press Start 2P", cursive;
+  font-size: 0.8em;
+}
+.chat-output .message .content .code-language {
+  color: #ff9d2d;
+  text-transform: uppercase;
+}
+.chat-output .message .content .copy-button {
+  font-family: "Press Start 2P", cursive;
+  font-size: 1em;
+  color: #e0e0e0;
+  background-color: #4a455a;
+  border: 2px solid #ff9d2d;
+  padding: 10px 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 3px 3px 0px 0px #0d0c0f;
+  font-size: 0.7em;
+  padding: 5px 8px;
+  border-color: #ffdd00;
+}
+.chat-output .message .content .copy-button:hover {
+  background-color: rgb(85.8679245283, 80.0660377358, 104.4339622642);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px 0px rgb(0.7222222222, 0.6666666667, 0.8333333333);
+}
+.chat-output .message .content .copy-button:active {
+  background-color: rgb(62.1320754717, 57.9339622642, 75.5660377358);
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px 0px #0d0c0f;
+}
+.chat-output .message .content .copy-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: rgb(50.2641509434, 46.8679245283, 61.1320754717);
+  border-color: rgb(255, 180.8, 96);
+  box-shadow: 3px 3px 0px 0px rgb(37.5555555556, 34.6666666667, 43.3333333333);
+}
+.chat-output .message .content .copy-button:disabled:hover, .chat-output .message .content .copy-button:disabled:active {
+  transform: none;
+}
+.chat-output .message .content .copy-button.copied {
+  background-color: #30d8d9;
+  color: #0d0c0f;
+  animation: copiedPulse 0.5s ease;
+}
+.chat-output .message .content .code-content {
+  padding: 10px;
+  overflow-x: auto;
+  background-color: transparent;
+  margin: 0;
+}
+.chat-output .message .content .code-content code {
+  font-family: "Share Tech Mono", monospace;
+  font-size: 1em;
+  line-height: 1.5;
+  color: #ffdd00;
+  white-space: pre;
+  display: block;
+}
+.chat-output .message.user-message {
+  border-color: #ffdd00;
+}
+.chat-output .message.user-message .role {
+  color: #ffdd00;
+}
+.chat-output .message.assistant-message {
+  border-color: #ff9d2d;
+}
+.chat-output .message.assistant-message .role {
+  color: #ff9d2d;
+}
+.chat-output .message.error-message {
+  border-color: #e94f55;
+  background-color: rgb(33.2115384615, 31.7019230769, 46.7980769231);
+}
+.chat-output .message.error-message .role {
+  color: #e94f55;
+}
+.chat-output .message.error-message .content {
+  color: rgb(238.6666666667, 124.3333333333, 128.7878787879);
+}
+.chat-output .message.system-message {
+  border-color: #30d8d9;
+}
+.chat-output .message.system-message .role {
+  color: #30d8d9;
+}
+.chat-output .message.loading .content::after {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-left: 8px;
+  border: 2px solid #30d8d9;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.controls-area {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.file-upload-area {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.upload-button {
+  font-family: "Press Start 2P", cursive;
+  font-size: 1em;
+  color: #e0e0e0;
+  background-color: #4a455a;
+  border: 2px solid #ff9d2d;
+  padding: 10px 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 3px 3px 0px 0px #0d0c0f;
+  font-size: 0.9em;
+  border-color: #30d8d9;
+}
+.upload-button:hover {
+  background-color: rgb(85.8679245283, 80.0660377358, 104.4339622642);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px 0px rgb(0.7222222222, 0.6666666667, 0.8333333333);
+}
+.upload-button:active {
+  background-color: rgb(62.1320754717, 57.9339622642, 75.5660377358);
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px 0px #0d0c0f;
+}
+.upload-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: rgb(50.2641509434, 46.8679245283, 61.1320754717);
+  border-color: rgb(255, 180.8, 96);
+  box-shadow: 3px 3px 0px 0px rgb(37.5555555556, 34.6666666667, 43.3333333333);
+}
+.upload-button:disabled:hover, .upload-button:disabled:active {
+  transform: none;
+}
+
+.file-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.file-item {
+  background: #4a455a;
+  border: 1px solid #8c4ed9;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-family: "VT323", monospace;
+  font-size: 0.9em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 3px 3px 0px 0px rgba(13, 12, 15, 0.7);
+  animation: slideIn 0.3s ease-out;
+}
+.file-item .file-icon {
+  font-size: 1em;
+}
+.file-item .file-name {
+  flex-grow: 1;
+  color: #e0e0e0;
+}
+.file-item .file-size {
+  font-size: 0.8em;
+  color: #30d8d9;
+  opacity: 0.9;
+}
+.file-item .remove {
+  cursor: pointer;
+  color: #e94f55;
+  font-weight: bold;
+}
+.file-item .remove:hover {
+  color: rgb(238.6666666667, 124.3333333333, 128.7878787879);
+  transform: scale(1.1);
+}
+
+.chat-input-area {
+  display: flex;
+  gap: 10px;
+}
+.chat-input-area #chat-input {
+  flex-grow: 1;
+  padding: 10px;
+  font-family: "VT323", monospace;
+  font-size: 1.1em;
+  background-color: #1a1822;
+  border: 2px solid #8c4ed9;
+  border-radius: 4px;
+  color: #e0e0e0;
+  outline: none;
+  resize: vertical;
+  min-height: 50px;
+  line-height: 1.4;
+  box-shadow: inset 2px 2px 0px 0px rgba(13, 12, 15, 0.5);
+}
+.chat-input-area #chat-input:focus {
+  border-color: #ff9d2d;
+  background-color: rgb(32.8586206897, 30.3310344828, 42.9689655172);
+}
+.chat-input-area #send-button {
+  font-family: "Press Start 2P", cursive;
+  font-size: 1em;
+  color: #e0e0e0;
+  background-color: #4a455a;
+  border: 2px solid #ff9d2d;
+  padding: 10px 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 3px 3px 0px 0px #0d0c0f;
+  align-self: flex-end;
+  padding: 10px 20px;
+}
+.chat-input-area #send-button:hover {
+  background-color: rgb(85.8679245283, 80.0660377358, 104.4339622642);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px 0px rgb(0.7222222222, 0.6666666667, 0.8333333333);
+}
+.chat-input-area #send-button:active {
+  background-color: rgb(62.1320754717, 57.9339622642, 75.5660377358);
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px 0px #0d0c0f;
+}
+.chat-input-area #send-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: rgb(50.2641509434, 46.8679245283, 61.1320754717);
+  border-color: rgb(255, 180.8, 96);
+  box-shadow: 3px 3px 0px 0px rgb(37.5555555556, 34.6666666667, 43.3333333333);
+}
+.chat-input-area #send-button:disabled:hover, .chat-input-area #send-button:disabled:active {
+  transform: none;
+}
+
+.arcade-footer {
+  text-align: center;
+  padding-top: 15px;
+  border-top: 3px solid #8c4ed9;
+  margin-top: 20px;
+  font-family: "Press Start 2P", cursive;
+  font-size: 0.9em;
+  color: #ffdd00;
+  text-shadow: 1px 1px 0 #0d0c0f;
+}
+.arcade-footer p {
+  margin: 0;
+  padding: 5px 0;
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+  .arcade-cabinet {
+    padding: 15px;
+    height: 95vh;
+  }
+  .main-content {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    margin-bottom: 15px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .sidebar h2 {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .sidebar .tool-button,
+  .sidebar .control-button {
+    width: auto;
+    flex-grow: 1;
+    min-width: 130px;
+  }
+  .arcade-header h1 {
+    font-size: 1.8em;
+  }
+  .chat-input-area #chat-input {
+    min-height: 40px;
+  }
+  .chat-input-area #send-button {
+    padding: 8px 15px;
+  }
+}
+@media (max-width: 480px) {
+  .arcade-header h1 {
+    font-size: 1.5em;
+  }
+  .arcade-header #current-tool-display {
+    font-size: 1em;
+  }
+  .sidebar h2 {
+    font-size: 1.1em;
+  }
+  .chat-output .message .content {
+    font-size: 1em;
+  }
+  #chat-input {
+    font-size: 1em;
+  }
+}
+:focus-visible {
+  outline: 3px dashed #ff9d2d;
+  outline-offset: 2px;
+}
+
+/*# sourceMappingURL=main.css.map */

@@ -1,0 +1,753 @@
+// =============================================================================
+// Variables - NUOVA PALETTE PIXEL ART
+// =============================================================================
+$pixel-bg-dark: #1a1822; // Sfondo molto scuro, quasi nero-viola
+$pixel-bg-medium: #2c2a3e; // Sfondo medio, blu-viola scuro
+$pixel-bg-light: #4a455a; // Sfondo leggermente più chiaro per elementi UI
+
+$pixel-primary: #ff9d2d; // Arancione vibrante per accenti primari
+$pixel-secondary: #ffdd00; // Giallo per accenti secondari
+$pixel-accent: #e94f55; // Rosso per errori o avvisi importanti
+$pixel-info: #30d8d9; // Ciano/Teal per informazioni o sistema
+$pixel-border: #8c4ed9; // Viola per bordi principali
+
+$text-primary: #e0e0e0; // Testo principale quasi bianco
+$text-dark: #1a1822; // Testo scuro per sfondi chiari (raro in questo tema)
+
+$pixel-black: #0d0c0f; // Un nero profondo per ombre nette
+
+$border-radius-pixel: 4px; // Un raggio piccolo per un look squadrato
+$transition-speed: 0.2s; // Transizioni più veloci, meno fluide
+
+// =============================================================================
+// Mixins
+// =============================================================================
+@mixin pixel-box-shadow($color: $pixel-black) {
+  box-shadow: 3px 3px 0px 0px $color;
+}
+
+@mixin pixel-box-shadow-inset($color: $pixel-black) {
+  box-shadow: inset 2px 2px 0px 0px $color;
+}
+
+@mixin pixel-button-style {
+  font-family: "Press Start 2P", cursive;
+  font-size: 1em; // Adattare in base al contesto
+  color: $text-primary;
+  background-color: $pixel-bg-light;
+  border: 2px solid $pixel-primary;
+  padding: 10px 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all $transition-speed ease-in-out;
+  @include pixel-box-shadow($pixel-black);
+
+  &:hover {
+    background-color: lighten($pixel-bg-light, 5%);
+    transform: translate(-1px, -1px);
+    @include pixel-box-shadow(darken($pixel-black, 5%));
+  }
+
+  &:active {
+    background-color: darken($pixel-bg-light, 5%);
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0px 0px $pixel-black;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: darken($pixel-bg-light, 10%);
+    border-color: lighten($pixel-primary, 10%);
+    @include pixel-box-shadow(lighten($pixel-black, 10%));
+    &:hover,
+    &:active {
+      transform: none;
+    }
+  }
+}
+
+// =============================================================================
+// Reset and Base Styles
+// =============================================================================
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "VT323", monospace; // Font di base più leggibile
+  background-color: $pixel-bg-dark;
+  color: $text-primary;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-size: 16px; // Aumentato per leggibilità
+  line-height: 1.6;
+  // Sfondo con pattern pixelato leggero
+  background-image: linear-gradient(45deg, $pixel-black 25%, transparent 25%),
+    linear-gradient(-45deg, $pixel-black 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, $pixel-black 75%),
+    linear-gradient(-45deg, transparent 75%, $pixel-black 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+// =============================================================================
+// Animations (manteniamo quelle utili)
+// =============================================================================
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+}
+
+@keyframes copiedPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes loadingSlide {
+  // Mantenuto per la loading bar, ma potrebbe essere semplificato
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+
+// =============================================================================
+// Main Container
+// =============================================================================
+.arcade-cabinet {
+  width: 95%;
+  max-width: 1200px;
+  background-color: $pixel-bg-medium;
+  border: 4px solid $pixel-border;
+  border-radius: $border-radius-pixel * 2; // Leggermente arrotondato per il cabinato
+  @include pixel-box-shadow($pixel-black);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 90vh;
+  position: relative;
+  overflow: hidden;
+}
+
+// =============================================================================
+// Header
+// =============================================================================
+.arcade-header {
+  text-align: center;
+  padding-bottom: 15px;
+  border-bottom: 3px solid $pixel-border;
+  margin-bottom: 20px; // Aggiunto spazio
+  font-family: "Press Start 2P", cursive;
+
+  h1 {
+    font-size: 2.2em;
+    color: $pixel-primary;
+    text-shadow: 2px 2px 0 $pixel-black; // Ombra netta
+    margin-bottom: 10px;
+  }
+
+  #current-tool-display {
+    font-size: 1.2em;
+    color: $pixel-secondary;
+    text-shadow: 1px 1px 0 $pixel-black;
+  }
+}
+
+// =============================================================================
+// Scrollbar (stile pixelato)
+// =============================================================================
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background: $pixel-bg-dark;
+  border: 1px solid $pixel-border;
+}
+::-webkit-scrollbar-thumb {
+  background: $pixel-primary;
+  border: 1px solid $pixel-black;
+  &:hover {
+    background: lighten($pixel-primary, 10%);
+  }
+}
+
+// =============================================================================
+// Text Selection
+// =============================================================================
+::selection {
+  background-color: $pixel-primary;
+  color: $pixel-black;
+}
+::-moz-selection {
+  background-color: $pixel-primary;
+  color: $pixel-black;
+}
+
+// =============================================================================
+// Loading States (semplificato)
+// =============================================================================
+.loading-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .loading-text {
+    font-family: "Press Start 2P", cursive;
+    font-size: 1em;
+    color: $pixel-info;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  .loading-bar {
+    // Semplificato, forse non serve se abbiamo testo + icona spin
+    width: 80px;
+    height: 8px;
+    background: $pixel-bg-dark;
+    border: 1px solid $pixel-info;
+    overflow: hidden;
+    position: relative;
+
+    .loading-fill {
+      height: 100%;
+      width: 100%; // O fare un effetto diverso
+      background: $pixel-info;
+      animation: loadingSlide 1.5s ease-in-out infinite; // Potrebbe diventare un blinking
+    }
+  }
+}
+
+// =============================================================================
+// Main Content
+// =============================================================================
+.main-content {
+  display: flex;
+  gap: 20px;
+  flex-grow: 1;
+  min-height: 0;
+}
+
+// =============================================================================
+// Sidebar
+// =============================================================================
+.sidebar {
+  width: 220px;
+  background-color: $pixel-bg-light;
+  padding: 15px;
+  border: 3px solid $pixel-border;
+  border-radius: $border-radius-pixel;
+  @include pixel-box-shadow($pixel-black);
+  display: flex;
+  flex-direction: column;
+
+  h2 {
+    font-family: "Press Start 2P", cursive;
+    font-size: 1.3em;
+    color: $pixel-primary;
+    text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 0 $pixel-black;
+  }
+
+  .tool-button,
+  .control-button {
+    @include pixel-button-style;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 0.9em; // Leggermente più piccolo per adattarsi
+
+    &.active {
+      background-color: $pixel-primary;
+      color: $pixel-black;
+      border-color: $pixel-black;
+      transform: translate(1px, 1px); // Effetto premuto
+      box-shadow: 1px 1px 0px 0px $pixel-black;
+    }
+  }
+
+  hr {
+    border: none;
+    height: 2px;
+    background-color: $pixel-border;
+    margin: 15px 0;
+  }
+
+  .control-button {
+    border-color: $pixel-secondary;
+    &:hover {
+      border-color: darken($pixel-secondary, 10%);
+    }
+    &.active {
+      // Se mai ci fosse uno stato active per questi
+      background-color: $pixel-secondary;
+      border-color: $pixel-black;
+    }
+  }
+}
+
+// =============================================================================
+// Chat Area
+// =============================================================================
+.chat-area {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.screen {
+  flex-grow: 1;
+  background-color: $pixel-bg-dark;
+  border: 3px solid $pixel-border;
+  border-radius: $border-radius-pixel;
+  padding: 15px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+  @include pixel-box-shadow-inset(rgba($pixel-black, 0.5)); // Ombra interna
+  position: relative;
+
+  // Scanlines (mantenute ma rese più sottili e meno invadenti)
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba($pixel-black, 0.1),
+      rgba($pixel-black, 0.1) 1px,
+      transparent 1px,
+      transparent 3px // Righe più distanziate
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+
+.chat-output {
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 5px; // Per scrollbar
+  position: relative;
+  z-index: 2;
+}
+
+// =============================================================================
+// Messages
+// =============================================================================
+.chat-output .message {
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: $border-radius-pixel;
+  border: 2px solid; // Il colore sarà definito sotto
+  word-wrap: break-word;
+  line-height: 1.5;
+  font-size: 1em;
+  background-color: $pixel-bg-medium; // Sfondo base messaggio
+
+  .role {
+    font-family: "Press Start 2P", cursive;
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.8em;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .content {
+    font-family: "VT323", monospace;
+    font-size: 1.1em; // Leggermente più grande del font base body
+    display: block;
+    color: $text-primary;
+
+    p {
+      margin: 0 0 10px 0;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    h1,
+    h2,
+    h3 {
+      // Stile per headers nel markdown
+      font-family: "Press Start 2P", cursive;
+      margin: 12px 0 8px 0;
+      line-height: 1.3;
+    }
+    h1 {
+      font-size: 1em;
+      color: $pixel-primary;
+    }
+    h2 {
+      font-size: 0.9em;
+      color: $pixel-secondary;
+    }
+    h3 {
+      font-size: 0.8em;
+      color: $pixel-info;
+    }
+
+    .inline-code {
+      background-color: $pixel-bg-dark;
+      border: 1px solid $pixel-border;
+      padding: 2px 5px;
+      border-radius: 2px;
+      font-family: "Share Tech Mono", monospace; // Mantenuto per codice
+      font-size: 0.95em;
+      color: $pixel-info;
+    }
+
+    .code-block {
+      background: $pixel-bg-dark;
+      border: 2px solid $pixel-border;
+      border-radius: $border-radius-pixel;
+      margin: 15px 0;
+      overflow: hidden;
+    }
+
+    .code-header {
+      background: $pixel-bg-light;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid $pixel-border;
+      font-family: "Press Start 2P", cursive;
+      font-size: 0.8em;
+    }
+
+    .code-language {
+      color: $pixel-primary;
+      text-transform: uppercase;
+    }
+
+    .copy-button {
+      @include pixel-button-style;
+      font-size: 0.7em;
+      padding: 5px 8px;
+      border-color: $pixel-secondary;
+      &.copied {
+        background-color: $pixel-info;
+        color: $pixel-black;
+        animation: copiedPulse 0.5s ease;
+      }
+    }
+
+    .code-content {
+      padding: 10px;
+      overflow-x: auto;
+      background-color: transparent; // Il blocco ha già sfondo
+      margin: 0;
+      code {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 1em;
+        line-height: 1.5;
+        color: $pixel-secondary; // Codice giallo su sfondo scuro
+        white-space: pre;
+        display: block;
+      }
+    }
+  }
+
+  // Message types
+  &.user-message {
+    border-color: $pixel-secondary;
+    .role {
+      color: $pixel-secondary;
+    }
+  }
+
+  &.assistant-message {
+    border-color: $pixel-primary;
+    .role {
+      color: $pixel-primary;
+    }
+  }
+
+  &.error-message {
+    border-color: $pixel-accent;
+    background-color: darken($pixel-bg-medium, 5%);
+    .role {
+      color: $pixel-accent;
+    }
+    .content {
+      color: lighten($pixel-accent, 10%);
+    }
+  }
+
+  &.system-message {
+    border-color: $pixel-info;
+    .role {
+      color: $pixel-info;
+    }
+  }
+
+  &.loading {
+    // Mantenuto per il messaggio di caricamento AI
+    .content::after {
+      // Semplice spin
+      content: "";
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin-left: 8px;
+      border: 2px solid $pixel-info;
+      border-top-color: transparent; // Per effetto spin
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+  }
+}
+
+// =============================================================================
+// Controls Area
+// =============================================================================
+.controls-area {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.file-upload-area {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.upload-button {
+  @include pixel-button-style;
+  font-size: 0.9em;
+  border-color: $pixel-info;
+}
+
+.file-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.file-item {
+  background: $pixel-bg-light;
+  border: 1px solid $pixel-border;
+  padding: 5px 10px;
+  border-radius: $border-radius-pixel;
+  font-family: "VT323", monospace;
+  font-size: 0.9em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  @include pixel-box-shadow(rgba($pixel-black, 0.7));
+  animation: slideIn 0.3s ease-out;
+
+  .file-icon {
+    font-size: 1em;
+  }
+  .file-name {
+    flex-grow: 1;
+    color: $text-primary;
+  }
+  .file-size {
+    font-size: 0.8em;
+    color: $pixel-info;
+    opacity: 0.9;
+  }
+  .remove {
+    cursor: pointer;
+    color: $pixel-accent;
+    font-weight: bold;
+    &:hover {
+      color: lighten($pixel-accent, 10%);
+      transform: scale(1.1);
+    }
+  }
+}
+
+.chat-input-area {
+  display: flex;
+  gap: 10px;
+
+  #chat-input {
+    flex-grow: 1;
+    padding: 10px;
+    font-family: "VT323", monospace;
+    font-size: 1.1em;
+    background-color: $pixel-bg-dark;
+    border: 2px solid $pixel-border;
+    border-radius: $border-radius-pixel;
+    color: $text-primary;
+    outline: none;
+    resize: vertical;
+    min-height: 50px;
+    line-height: 1.4;
+    @include pixel-box-shadow-inset(rgba($pixel-black, 0.5));
+
+    &:focus {
+      border-color: $pixel-primary;
+      background-color: lighten($pixel-bg-dark, 3%);
+    }
+  }
+
+  #send-button {
+    @include pixel-button-style;
+    align-self: flex-end; // Si allinea con il fondo del textarea se questo cresce
+    padding: 10px 20px; // Più largo
+  }
+}
+
+// =============================================================================
+// Footer
+// =============================================================================
+.arcade-footer {
+  text-align: center;
+  padding-top: 15px;
+  border-top: 3px solid $pixel-border;
+  margin-top: 20px;
+  font-family: "Press Start 2P", cursive;
+  font-size: 0.9em;
+  color: $pixel-secondary;
+  text-shadow: 1px 1px 0 $pixel-black;
+
+  p {
+    margin: 0;
+    padding: 5px 0;
+  }
+}
+
+// =============================================================================
+// Responsive Design (semplificato, adattare se necessario)
+// =============================================================================
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+  .arcade-cabinet {
+    padding: 15px;
+    height: 95vh;
+  }
+  .main-content {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    margin-bottom: 15px;
+    flex-direction: row; // Bottoni in riga
+    flex-wrap: wrap; // A capo se non ci stanno
+    justify-content: center;
+    h2 {
+      width: 100%;
+      margin-bottom: 10px;
+    } // Titolo a tutta larghezza
+    .tool-button,
+    .control-button {
+      width: auto; // Adatta alla larghezza del contenuto
+      flex-grow: 1; // Crescono per riempire lo spazio
+      min-width: 130px; // Larghezza minima
+    }
+  }
+  .arcade-header h1 {
+    font-size: 1.8em;
+  }
+  .chat-input-area {
+    #chat-input {
+      min-height: 40px;
+    }
+    #send-button {
+      padding: 8px 15px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .arcade-header h1 {
+    font-size: 1.5em;
+  }
+  .arcade-header #current-tool-display {
+    font-size: 1em;
+  }
+  .sidebar h2 {
+    font-size: 1.1em;
+  }
+  .chat-output .message .content {
+    font-size: 1em;
+  }
+  #chat-input {
+    font-size: 1em;
+  }
+}
+
+// =============================================================================
+// Accessibility & Focus
+// =============================================================================
+:focus-visible {
+  outline: 3px dashed $pixel-primary;
+  outline-offset: 2px;
+}
+
+// Rimuovo temporaneamente sezioni non essenziali per questa trasformazione:
+// Light Mode (non richiesto per retro-pixel)
+// Print Styles (non primario)
+// Grid System (non usato attivamente)
+// Custom Components (tooltip, badge, card, progress - non usati attivamente)
+// Utility Classes (neon-*, highlight, interactive-element - ridondanti o sostituiti)
+// Form Elements (error-state, success-state, checkbox/radio - non presenti nell'HTML fornito)
