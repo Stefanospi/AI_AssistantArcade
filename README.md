@@ -16,7 +16,7 @@ Una semplice chat AI dove puoi:
 - Chiedere spiegazioni su codice
 - Ricevere suggerimenti su come affrontare problemi comuni
 
-### ⚠️L'upload dei file è in fase di fix, dato che è implementato ma non legge nella maniera corretta i file
+> ‼️ L'upload dei file è in fase di fix, dato che è implementato ma non legge nella maniera corretta i file
 
 
 ### 🔠 Regex Builder
