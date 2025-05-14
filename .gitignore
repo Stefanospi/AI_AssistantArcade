@@ -205,3 +205,4 @@ frontend/node_modules/to-regex-range/index.js
 frontend/node_modules/to-regex-range/LICENSE
 frontend/node_modules/to-regex-range/package.json
 frontend/node_modules/to-regex-range/README.md
+backend/.env
